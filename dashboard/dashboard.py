@@ -18,11 +18,21 @@ st.title("Analisis Penyewaan Sepeda")
 st.subheader('Suhu vs Penyewaan Sepeda')
 
 # Slider untuk memilih rentang suhu
-min_temp, max_temp = st.slider('Pilih rentang suhu', min_value=float(day_data['temp'].min()), 
-                               max_value=float(day_data['temp'].max()), value=(10.0, 30.0))
+min_temp, max_temp = st.slider(
+    'Pilih rentang suhu',
+    min_value=float(day_data['temp'].min()), 
+    max_value=float(day_data['temp'].max()), 
+    value=(10.0, 30.0)
+)
+
+# Menampilkan nilai minimum dan maksimum dari slider untuk debugging
+st.write(f"Rentang suhu yang dipilih: {min_temp} hingga {max_temp}")
 
 # Filter data berdasarkan suhu yang dipilih
 filtered_data = day_data[(day_data['temp'] >= min_temp) & (day_data['temp'] <= max_temp)]
+
+# Tambahkan verifikasi jumlah data setelah pemfilteran
+st.write(f"Jumlah data setelah filter: {filtered_data.shape[0]} baris")
 
 # Membuat scatter plot suhu vs penyewaan
 fig, ax = plt.subplots()
@@ -31,6 +41,7 @@ ax.set_xlabel('Suhu')
 ax.set_ylabel('Penyewaan Sepeda')
 ax.set_title('Scatter Plot Suhu vs Penyewaan Sepeda')
 
+# Menampilkan plot di Streamlit
 st.pyplot(fig)
 
 # Plot penyewaan berdasarkan hari dalam minggu
@@ -44,4 +55,5 @@ ax2.set_xlabel('Hari dalam Minggu')
 ax2.set_ylabel('Rata-rata Penyewaan Sepeda')
 ax2.set_title('Rata-rata Penyewaan Sepeda Berdasarkan Hari dalam Minggu')
 
+# Menampilkan plot di Streamlit
 st.pyplot(fig2)
