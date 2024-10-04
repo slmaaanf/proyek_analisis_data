@@ -14,51 +14,39 @@ day_data['weekday'] = day_data['weekday'].apply(lambda x: days_of_week[x])
 # Antarmuka Streamlit
 st.title("Analisis Penyewaan Sepeda")
 
-# Plot suhu vs penyewaan dengan slider interaktif
-st.subheader('Suhu vs Penyewaan Sepeda')
+# Tampilkan Tabel Data
+st.subheader("Tabel Data")
+st.dataframe(day_data)
 
-# Slider untuk memilih rentang suhu
-min_temp, max_temp = st.slider(
-    'Pilih rentang suhu',
-    min_value=float(day_data['temp'].min()), 
-    max_value=float(day_data['temp'].max()), 
-    value=(10.0, 30.0)
-)
+# Tampilkan Statistik Deskriptif
+st.subheader("Statistik Deskriptif")
+st.write(day_data.describe())
 
-# Menampilkan nilai minimum dan maksimum dari slider untuk debugging
-st.write(f"Rentang suhu yang dipilih: {min_temp} hingga {max_temp}")
+# Histogram Suhu
+st.subheader("Distribusi Suhu")
+fig_hist, ax_hist = plt.subplots()
+ax_hist.hist(day_data['temp'], bins=30, color='skyblue', edgecolor='black')
+ax_hist.set_xlabel('Suhu')
+ax_hist.set_ylabel('Frekuensi')
+ax_hist.set_title('Histogram Distribusi Suhu')
+st.pyplot(fig_hist)
 
-# Filter data berdasarkan suhu yang dipilih
-filtered_data = day_data[(day_data['temp'] >= min_temp) & (day_data['temp'] <= max_temp)]
+# Tren Penyewaan Sepeda Seiring Waktu
+if 'date' in day_data.columns:  # Pastikan ada kolom 'date'
+    day_data['date'] = pd.to_datetime(day_data['date'])
+    st.subheader("Tren Penyewaan Sepeda Seiring Waktu")
+    fig_trend, ax_trend = plt.subplots()
+    ax_trend.plot(day_data['date'], day_data['cnt'], color='orange')
+    ax_trend.set_xlabel('Tanggal')
+    ax_trend.set_ylabel('Jumlah Penyewaan')
+    ax_trend.set_title('Tren Penyewaan Sepeda')
+    st.pyplot(fig_trend)
 
-# Tambahkan verifikasi jumlah data setelah pemfilteran
-st.write(f"Jumlah data setelah filter: {filtered_data.shape[0]} baris")
+# Filter berdasarkan hari
+selected_day = st.selectbox('Pilih Hari', days_of_week)
+filtered_by_day = day_data[day_data['weekday'] == selected_day]
+st.write(filtered_by_day)
 
-# Cek apakah ada data setelah filter
-if filtered_data.shape[0] > 0:
-    # Membuat scatter plot suhu vs penyewaan
-    fig, ax = plt.subplots()
-    ax.scatter(filtered_data['temp'], filtered_data['cnt'], color='blue')
-    ax.set_xlabel('Suhu')
-    ax.set_ylabel('Penyewaan Sepeda')
-    ax.set_title('Scatter Plot Suhu vs Penyewaan Sepeda')
-
-    # Menampilkan plot di Streamlit
-    st.pyplot(fig)
-else:
-    # Menampilkan peringatan jika tidak ada data
-    st.warning("Tidak ada data untuk rentang suhu yang dipilih. Coba pilih rentang suhu yang berbeda.")
-
-# Plot penyewaan berdasarkan hari dalam minggu
-st.subheader('Penyewaan Berdasarkan Hari dalam Minggu')
-weekday_data = day_data.groupby('weekday')['cnt'].mean().reset_index()
-
-# Membuat bar plot penyewaan per hari
-fig2, ax2 = plt.subplots()
-ax2.bar(weekday_data['weekday'], weekday_data['cnt'], color='green')
-ax2.set_xlabel('Hari dalam Minggu')
-ax2.set_ylabel('Rata-rata Penyewaan Sepeda')
-ax2.set_title('Rata-rata Penyewaan Sepeda Berdasarkan Hari dalam Minggu')
-
-# Menampilkan plot di Streamlit
-st.pyplot(fig2)
+# Insight
+st.subheader("Insight")
+st.write("Dari analisis data, kita dapat melihat bahwa penyewaan sepeda cenderung meningkat pada hari-hari tertentu, terutama pada akhir pekan.")
