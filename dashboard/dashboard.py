@@ -34,15 +34,20 @@ filtered_data = day_data[(day_data['temp'] >= min_temp) & (day_data['temp'] <= m
 # Tambahkan verifikasi jumlah data setelah pemfilteran
 st.write(f"Jumlah data setelah filter: {filtered_data.shape[0]} baris")
 
-# Membuat scatter plot suhu vs penyewaan
-fig, ax = plt.subplots()
-ax.scatter(filtered_data['temp'], filtered_data['cnt'], color='blue')
-ax.set_xlabel('Suhu')
-ax.set_ylabel('Penyewaan Sepeda')
-ax.set_title('Scatter Plot Suhu vs Penyewaan Sepeda')
+# Cek apakah ada data setelah filter
+if filtered_data.shape[0] > 0:
+    # Membuat scatter plot suhu vs penyewaan
+    fig, ax = plt.subplots()
+    ax.scatter(filtered_data['temp'], filtered_data['cnt'], color='blue')
+    ax.set_xlabel('Suhu')
+    ax.set_ylabel('Penyewaan Sepeda')
+    ax.set_title('Scatter Plot Suhu vs Penyewaan Sepeda')
 
-# Menampilkan plot di Streamlit
-st.pyplot(fig)
+    # Menampilkan plot di Streamlit
+    st.pyplot(fig)
+else:
+    # Menampilkan peringatan jika tidak ada data
+    st.warning("Tidak ada data untuk rentang suhu yang dipilih. Coba pilih rentang suhu yang berbeda.")
 
 # Plot penyewaan berdasarkan hari dalam minggu
 st.subheader('Penyewaan Berdasarkan Hari dalam Minggu')
