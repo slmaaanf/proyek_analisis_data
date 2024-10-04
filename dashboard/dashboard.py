@@ -3,8 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
-# Memuat data
-day_data_path = os.path.join('D:/Bangkit Machine Learning/Analysis Data/data/day.csv')
+# Memuat data menggunakan path relatif
+day_data_path = os.path.join('data', 'day.csv')
 day_data = pd.read_csv(day_data_path)
 
 # Menambahkan nama hari dalam minggu untuk kejelasan
